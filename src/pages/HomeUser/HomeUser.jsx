@@ -20,7 +20,7 @@ function HomeUser({user}) {
     const [tipo, setTipo] =useState("");
     const [FechaInicial, setFechaInicial] = useState("");
     const [FechaFinal , setFechaFinal] = useState("");
-    const [comentario, setComentario] = useState("Buen día");
+    const [comentario, setComentario] = useState("");
     
     
     const VacacionesCollection = collection(db, "Vacaciones");
