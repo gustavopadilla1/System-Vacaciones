@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 
-import { collection, addDoc } from 'firebase/firestore' 
+import { collection, addDoc, getDocs } from 'firebase/firestore' 
 import { db} from '../../Config/firestore';
+import {Box, Modal} from '@mui/material'
 
 
 // import {getAuth,signOut} from 'firebase/auth';
@@ -14,6 +15,10 @@ import { db} from '../../Config/firestore';
 
 
 function HomeUser({user}) {
+  const [colaboladores, setcolaboladores] = useState([]);
+  const [Vacaciones, setVacaciones] = useState([]);
+
+
     const [, setCorreo] = useState("");
     const [, setUsuarios] = useState("");
     const [,setequipo] = useState("");
@@ -21,11 +26,33 @@ function HomeUser({user}) {
     const [FechaInicial, setFechaInicial] = useState("");
     const [FechaFinal , setFechaFinal] = useState("");
     const [comentario, setComentario] = useState("");
+    const [Acreditacion, setAcreditacion] = useState("En proceso");
     
-    
+
     const VacacionesCollection = collection(db, "Vacaciones");
+    const colaboladoresCollection = collection(db, "colaboladores");
+
+    
+     // /// modal
+     const [open, setOpen] = React.useState(false);
+     const handleOpen = () => setOpen(true);
+     const handleClose = () => setOpen(false);
   
-  
+
+    // Style del modal
+    const style = {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: 500,
+      bgcolor: 'background.paper',
+      border: '2px solid #000',
+      boxShadow: 24,
+      p: 4,
+    };
+
+
     const Add = async (e) =>{
   
       e.preventDefault();        
@@ -37,7 +64,8 @@ function HomeUser({user}) {
          tipo:tipo,
          FechaInicial:FechaInicial,
          FechaFinal:FechaFinal,
-         comentario:comentario        
+         comentario:comentario,
+         Acreditacion:Acreditacion      
         })
   
       console.log(e);  
@@ -53,17 +81,98 @@ function HomeUser({user}) {
     //     signOut(auth)
   
     }
-   
+  
+    
+
+    const getvacaciones = async () => {
+      const data = await getDocs(VacacionesCollection)
+      setVacaciones(
+        data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      )
+      console.log(Vacaciones)
+  
+    }
+  
+    //mostrar los colaboradores
+    const getcolaboladores = async () => {
+      const data = await getDocs(colaboladoresCollection)
+      // console.log(data.docs);
+      setcolaboladores(
+        data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      )
+      console.log(colaboladores)
+  
+    }
+  
+    // use efect  
+    useEffect(() => {
+      getvacaciones()
+      getcolaboladores()
+    }, [])
   
     return (
       <div>
-   
+
+    <div className='d-flex justify-content-end '>
+      <button className='btn btn-primary'  onClick={handleOpen}>   
+              Acreditacion
+     </button>
+    </div>     
   
+    <Modal
+  open={open}
+  onClose={handleClose}
+  aria-labelledby="modal-modal-title"
+  aria-describedby="modal-modal-description"
+>
+
+
+  <Box sx={style}>
+    {/* contenido del moda --- y en el contenido tenemos todo para registrar el cheque del administrador  */}
+    
+      {
+      colaboladores.map((Colaborador) =>{
+        return( 
+          <div>
+  
+        
+        {
+          Vacaciones.map((vacacion)=>{
+            if(Colaborador['NOMBRE COMPLETO'] === vacacion['NOMBRE COMPLETO']){
+              return(
+              
+
+      <div>
+                        {/* <p>Fechas</p> 
+                          <p>{vacacion.FechaInicial}-{vacacion.FechaFinal}</p> */}
+                          <p>Estado</p> 
+                           <h6>   {vacacion.Acreditacion} </h6>                     
+      </div>
+
+              )
+          }
+          })      
+        }
+         </div>
+        )
+      })
+      }
+    
+  
+    
+
+
+
+
+
+  </Box>
+</Modal>
+
+
        <form  className="was-validated" 
         onSubmit={Add} 
         >
   
-    
     <br/>
   
     <div className="row d-flex justify-content-evenly" >
@@ -130,12 +239,13 @@ function HomeUser({user}) {
       
      <div className="row d-flex justify-content-evenly" >
   <div className="col-5">
-  <label className="col-sm-1 col-form-label">Fecha Inicial: </label>
+  <label className="col-sm-1 col-form-label is-invalid">Fecha Inicial: </label>
   <input  
                           value={FechaInicial}  
                         onChange ={(e)=> setFechaInicial(e.target.value)}                        
                         className='form-control '
                         type="date"
+                        required                  
                         />		
   </div>
 
@@ -146,6 +256,7 @@ function HomeUser({user}) {
                         onChange ={(e)=> setFechaFinal(e.target.value)}                        
                         className='form-control '
                         type="date"
+                        required
                                                 />	
                  
   
