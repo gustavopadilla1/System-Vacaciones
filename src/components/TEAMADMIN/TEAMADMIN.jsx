@@ -1,15 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import { collection, getDocs, addDoc, doc, updateDoc,getDoc } from 'firebase/firestore'
+import { collection, getDocs, addDoc, doc, updateDoc,getDoc, startAt } from 'firebase/firestore'
 import { db } from '../../Config/firestore'
 import {Box, Modal} from '@mui/material'
 
+
+import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+import format from "date-fns/format";
+import getDay from "date-fns/getDay";
+import parse from "date-fns/parse";
+import startOfWeek from "date-fns/startOfWeek";
+
+
 import { useParams} from 'react-router-dom'
 
+const locales = {
+    "en-US": require("date-fns/locale/en-US"),
+};
+const localizer = dateFnsLocalizer({
+    format,
+    parse,
+    startOfWeek,
+    getDay,
+    locales,
+});
 
 function TEAMADMIN({ user }) {
     const [Vacaciones, setVacaciones] = useState([]);
     const [Acreditacion, setAcreditacion] = useState(""); 
-    
+    const [comentarioSuperior, setcomentarioSuperior] = useState("");
     const VacacionesCollection = collection(db, "Vacaciones");
   
     // /// modal
@@ -17,7 +35,6 @@ function TEAMADMIN({ user }) {
       const handleOpen = () => setOpen(true);
       const handleClose = () => setOpen(false);
 
- 
     
    
 
@@ -83,7 +100,6 @@ function TEAMADMIN({ user }) {
     {/* contenido del moda --- y en el contenido tenemos todo para registrar el cheque del administrador  */}
 
 
-
     <form 
     // onSubmit={update}
     >
@@ -95,14 +111,25 @@ function TEAMADMIN({ user }) {
                                                     className="form-select form-select-lg mb-3" aria-label=".form-select-md example"
                                                     required
                                                 >
-
                                                     <option></option>
                                                     <option >Aprobar</option>
-
-                                                    <option>Denegar </option>
-                                                    
+                                                    <option>Denegar </option>                                                    
                                                 </select>
-                                         <button className='btn btn-primary' >Confirmar </button>       
+
+
+<div className="row mb-1 justify-content-center" >
+      <div className="col-sm-11">
+      <textarea              
+                          placeholder="Deseas colocar un comentario: (opcional)"                                                
+                          value={comentarioSuperior}
+                          onChange ={(e)=> setcomentarioSuperior(e.target.value)}
+                          type='text'
+                          className='form-control'
+                      />
+      </div>
+      </div>
+<br />
+                                         <button className='btn btn-primary justify-content-center ' >Enviar  </button>       
     </form>
 
 
@@ -121,6 +148,7 @@ function TEAMADMIN({ user }) {
                         <th scope="col">id</th>
                             <th scope="col">USUARIO</th>
                             <th scope="col">EQUIPO</th>
+                            <th scope="col">TIPO</th>                            
                             <th scope="col">FECHA INICIO</th>
                             <th scope="col">FECHA FINAL</th>
                             <th scope="col">ACREDITACION</th>
@@ -133,6 +161,7 @@ function TEAMADMIN({ user }) {
                         Vacaciones
                             .map((vacacion) => {
                                         if (vacacion['EQUIPO DE TRABAJO'] === "TEAM ADMIN") {
+                                            
 
                                 return (
 
@@ -141,7 +170,8 @@ function TEAMADMIN({ user }) {
                                         <tr onClick={handleOpen}  >
                                         <td
                                                 Style="font-family: 'Anek Latin', sans-serif; Font-size: 13px;" >
-                                                {vacacion.id}
+                                                    {vacacion.id}
+                                                {/* {new Date(vacacion.start).toLocaleDateString("en-US")} */}
                                             </td>
                                                 <td >
                                                     <div className="h-25">
@@ -167,14 +197,17 @@ function TEAMADMIN({ user }) {
                                                 Style="font-family: 'Anek Latin', sans-serif; Font-size: 13px;" >
                                                 {vacacion['EQUIPO DE TRABAJO']}
                                             </td>
-
                                             <td
                                                 Style="font-family: 'Anek Latin', sans-serif; Font-size: 13px;" >
-                                                {vacacion.FechaInicial}
+                                                {vacacion.title}
                                             </td>
                                             <td
                                                 Style="font-family: 'Anek Latin', sans-serif; Font-size: 13px;" >
-                                                {vacacion.FechaFinal}
+                                                {vacacion.start}
+                                            </td>
+                                            <td
+                                                Style="font-family: 'Anek Latin', sans-serif; Font-size: 13px;" >
+                                                {vacacion.end}
                                             </td>
                                             <td
                                                 Style="font-family: 'Anek Latin', sans-serif; Font-size: 13px;" >
@@ -197,6 +230,9 @@ function TEAMADMIN({ user }) {
                     }
                 </table>
 
+
+                <br /><br />
+                <Calendar localizer={localizer} events={Vacaciones}  style={{ height: 700, margin: "50px"}} />
             </div>
         </div>
     )

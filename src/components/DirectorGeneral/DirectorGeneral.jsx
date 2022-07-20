@@ -3,13 +3,12 @@ import { collection, getDocs, addDoc, doc, updateDoc,getDoc } from 'firebase/fir
 import { db } from '../../Config/firestore'
 import {Box, Modal} from '@mui/material'
 
-// import { useParams} from 'react-router-dom'
+import { useParams} from 'react-router-dom'
 
 
 function DirectorGeneral({ user }) {
     const [Vacaciones, setVacaciones] = useState([]);
-    const [status, setstatus] = useState("")
-    // const [Status, setStatus] = useState("");
+    const [Acreditacion, setAcreditacion] = useState(""); 
     
     const VacacionesCollection = collection(db, "Vacaciones");
   
@@ -18,25 +17,14 @@ function DirectorGeneral({ user }) {
       const handleOpen = () => setOpen(true);
       const handleClose = () => setOpen(false);
 
-    //   const update = async (e) =>{
-    //     e.preventDefault();        
-    //     const Vacacion= doc(db, "Vacaciones", id)
-    //     const data = {Status:Status}
-    //     await updateDoc(Vacacion, data)
+ 
     
-    //     console.log(e);  
-    //   alert(e);
-      
-    //   }
+   
 
-    //   const getUsuariosById = async (id) =>{
 
-    //  const Vacacion = doc(db, "Vacaciones", id)
-    
-                   
-    //         console.log(Vacacion.data());                   
-    //         setStatus(Vacacion.data().Status)
-
+    //   const update = async (id, Acreditacion) => {
+    //     await updateDoc(doc(db, 'Vacaciones', id), {Acreditacion})
+    //     console.log(Acreditacion);
         
     //   }
 
@@ -56,7 +44,8 @@ function DirectorGeneral({ user }) {
     // use efect  
     useEffect(() => {
         getvacaciones()
-        // getUsuariosById(id)
+        
+
 
     }, [])
 
@@ -75,15 +64,11 @@ function DirectorGeneral({ user }) {
       };
 
 
-
-
-
     return (
         <div user={user}>
 
             {/* boton y elmodal */}
             {/* <Button onClick={handleOpen} variant="contained" color="success" endIcon={<SendIcon />}>Checar</Button> */}
-            
             <br /><br />
 
 <Modal
@@ -96,21 +81,24 @@ function DirectorGeneral({ user }) {
 
   <Box sx={style}>
     {/* contenido del moda --- y en el contenido tenemos todo para registrar el cheque del administrador  */}
-    
+
+
+
     <form 
     // onSubmit={update}
     >
-    
+
+
     <label className="col-sm-1 col-form-label">Accion: </label>
-          <select
-                                                    value={status}
-                                                    onChange={(e) => setstatus(e.target.value)}
+          <select                                   value={Acreditacion || ""}                    
+                                                    onChange={(e) => setAcreditacion(e.target.value)}
                                                     className="form-select form-select-lg mb-3" aria-label=".form-select-md example"
                                                     required
                                                 >
 
                                                     <option></option>
-                                                    <option>Aprobar</option>
+                                                    <option >Aprobar</option>
+
                                                     <option>Denegar </option>
                                                     
                                                 </select>
@@ -130,28 +118,31 @@ function DirectorGeneral({ user }) {
 
                     <thead>
                         <tr Style="font-family: 'Heebo', sans-serif; Font-size: 14px;" >
-                            <th scope="col">USUARIOññ</th>
+                        <th scope="col">id</th>
+                            <th scope="col">USUARIO</th>
                             <th scope="col">EQUIPO</th>
                             <th scope="col">FECHA INICIO</th>
                             <th scope="col">FECHA FINAL</th>
+                            <th scope="col">ACREDITACION</th>
                             <th scope="col">COMENTARIOS</th>
-
                         </tr>
                     </thead>
-                    <br />
-
+                   
 
                     {
                         Vacaciones
                             .map((vacacion) => {
-                                            
-                                        
+                                   
+
                                 return (
 
-                                    <tbody key={vacacion.id} onClick={handleOpen}>
+                                    <tbody key={vacacion.id} >
                                         
-                                        <tr  >
-                                            <div className='h-25'>
+                                        <tr onClick={handleOpen}  >
+                                        <td
+                                                Style="font-family: 'Anek Latin', sans-serif; Font-size: 13px;" >
+                                                {vacacion.id}
+                                            </td>
                                                 <td >
                                                     <div className="h-25">
 
@@ -172,7 +163,6 @@ function DirectorGeneral({ user }) {
                                                         </div>
                                                     </div>
                                                 </td>
-                                            </div>
                                             <td
                                                 Style="font-family: 'Anek Latin', sans-serif; Font-size: 13px;" >
                                                 {vacacion['EQUIPO DE TRABAJO']}
@@ -188,6 +178,10 @@ function DirectorGeneral({ user }) {
                                             </td>
                                             <td
                                                 Style="font-family: 'Anek Latin', sans-serif; Font-size: 13px;" >
+                                                {vacacion.Acreditacion}
+                                            </td>
+                                            <td
+                                                Style="font-family: 'Anek Latin', sans-serif; Font-size: 13px;" >
                                                 {vacacion.comentario}
                                             </td>
                                             <td>
@@ -197,8 +191,6 @@ function DirectorGeneral({ user }) {
                                     </tbody>
                                 )
                             }
-
-                            
                             )
                     }
                 </table>

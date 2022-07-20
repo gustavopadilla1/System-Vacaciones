@@ -5,6 +5,27 @@ import { db} from '../../Config/firestore';
 import {Box, Modal} from '@mui/material'
 
 
+import format from "date-fns/format";
+import getDay from "date-fns/getDay";
+import parse from "date-fns/parse";
+import startOfWeek from "date-fns/startOfWeek";
+import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+const locales = {
+    "en-US": require("date-fns/locale/en-US"),
+};
+const localizer = dateFnsLocalizer({
+    format,
+    parse,
+    startOfWeek,
+    getDay,
+    locales,
+});
+
+
 // import {getAuth,signOut} from 'firebase/auth';
 // import firebaseApp from '../../Config/Credenciales'
 
@@ -22,12 +43,13 @@ function HomeUser({user}) {
     const [, setCorreo] = useState("");
     const [, setUsuarios] = useState("");
     const [,setequipo] = useState("");
-    const [tipo, setTipo] =useState("");
-    const [FechaInicial, setFechaInicial] = useState("");
-    const [FechaFinal , setFechaFinal] = useState("");
     const [comentario, setComentario] = useState("");
     const [Acreditacion, setAcreditacion] = useState("En proceso");
     
+    const [title, settitle] = useState("");
+    const [start, setstart] = useState("");
+    const [end, setend] = useState("");
+
 
     const VacacionesCollection = collection(db, "Vacaciones");
     const colaboladoresCollection = collection(db, "colaboladores");
@@ -61,27 +83,23 @@ function HomeUser({user}) {
         {['CORREO ELECTRONICO']:user['CORREO ELECTRONICO'],
          ['NOMBRE COMPLETO']: user['NOMBRE COMPLETO'],
          ['EQUIPO DE TRABAJO']:user['EQUIPO DE TRABAJO'],
-         tipo:tipo,
-         FechaInicial:FechaInicial,
-         FechaFinal:FechaFinal,
          comentario:comentario,
-         Acreditacion:Acreditacion      
+         Acreditacion:Acreditacion ,
+         title:title,
+         start:start,
+         end:end
         })
   
       console.log(e);  
-    alert(e);
-    //   MySwal.fire({
-    //           position: 'center',
-    //           icon: 'success',
-    //           title: 'Bienvenido Registro hecho con exito !!!',
-    //           showConfirmButton: false,
-    //           timer: 2500
-    //         })    
-        
-    //     signOut(auth)
-  
     }
   
+    function handleAddEvent() {
+      setVacaciones([...Vacaciones, 
+          {title, start, end
+      }]);
+      console.log(Vacaciones);
+      
+  }
     
 
     const getvacaciones = async () => {
@@ -218,8 +236,8 @@ function HomeUser({user}) {
   <div className="col-5">
   <label className="col-sm-1 col-form-label">Tipo: </label>
       <select 
-            value={tipo}  
-            onChange ={(e)=> setTipo(e.target.value)} 
+            value={title}  
+            onChange ={(e)=> settitle(e.target.value)} 
             className="form-select form-select-lg mb-3 is-invalid" aria-label=".form-select-md example" 
             required
             >
@@ -229,6 +247,7 @@ function HomeUser({user}) {
                           <option>Permisos</option>
                           <option>Incapacidad</option>					
                           </select>
+                         
                  
   
 </div>
@@ -240,9 +259,10 @@ function HomeUser({user}) {
      <div className="row d-flex justify-content-evenly" >
   <div className="col-5">
   <label className="col-sm-1 col-form-label is-invalid">Fecha Inicial: </label>
-  <input  
-                          value={FechaInicial}  
-                        onChange ={(e)=> setFechaInicial(e.target.value)}                        
+       <input  
+                          value={start}  
+                        selected = {start}  
+                        onChange ={(e)=> setstart(e.target.value)}                        
                         className='form-control '
                         type="date"
                         required                  
@@ -252,12 +272,14 @@ function HomeUser({user}) {
 
   <div className="col-5">
       <label className="col-sm-1 col-form-label">Fecha Final: </label>
-      <input  value={FechaFinal}  
-                        onChange ={(e)=> setFechaFinal(e.target.value)}                        
+       <input  
+                          value={end}  
+                        selected = {end}  
+                        onChange ={(e)=> setend(e.target.value)}                        
                         className='form-control '
                         type="date"
-                        required
-                                                />	
+                        required                  
+                        />	
                  
   
 </div>
@@ -293,7 +315,7 @@ function HomeUser({user}) {
       Style="padding:11px;"  
       type='submit'  
       className='btn btn-success '  
-      
+      onClick={handleAddEvent}
     >   
     <i className="fa-solid fa-arrow-right" />&nbsp;
       Enviar Solicitud
@@ -307,6 +329,8 @@ function HomeUser({user}) {
     </div>
   
        </form>
+       <Calendar localizer={localizer} events={Vacaciones}  style={{ height: 700, margin: "50px"}} />
+
       </div>
   
    )
