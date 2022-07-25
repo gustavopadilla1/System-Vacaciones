@@ -10,8 +10,11 @@ const auth = getAuth(firebaseApp);
 function Appbar() {
     
   return (
+    
     <div>
-       <div>            
+       <div> 
+      
+        
             <Box sx={{ flexGrow: 1 }}>
                 <AppBar position="static"  color='primary'>
                 {/* <AppBar position="fixed" color='primary'> */}
@@ -29,16 +32,20 @@ function Appbar() {
                         <Typography variant='h6' component="div" sx={{ flexGrow: 1 }}>                        
                         {/* Home                                                 */}
                         </Typography>
-
+                        
                         <Button color="inherit" onClick={()=> signOut(auth)} >
                             salir
-                    </Button>                                               
+                    </Button>  
+                                                               
                     
                
                     </Toolbar>
               </AppBar>
             </Box>
         </div>
+
+
+   
 
     </div>
   )

@@ -3,58 +3,26 @@ import React, {useEffect, useState} from 'react';
 import { collection, addDoc, getDocs } from 'firebase/firestore' 
 import { db} from '../../Config/firestore';
 import {Box, Modal} from '@mui/material'
-
-
-import format from "date-fns/format";
-import getDay from "date-fns/getDay";
-import parse from "date-fns/parse";
-import startOfWeek from "date-fns/startOfWeek";
-import { Calendar, dateFnsLocalizer } from "react-big-calendar";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-
-const locales = {
-    "en-US": require("date-fns/locale/en-US"),
-};
-const localizer = dateFnsLocalizer({
-    format,
-    parse,
-    startOfWeek,
-    getDay,
-    locales,
-});
-
-
-// import {getAuth,signOut} from 'firebase/auth';
-// import firebaseApp from '../../Config/Credenciales'
-
-// import Swal from 'sweetalert2'
-// import withReactContent from 'sweetalert2-react-content'
-// const MySwal = withReactContent(Swal);
-// const auth = getAuth(firebaseApp);
-
+import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import Calendario from '../../components/Calendario/Calendario';
+import NotificacionGoogle from '../../components/NotificacionGoogle/NotificacionGoogle';
 
 function HomeUser({user}) {
   const [colaboladores, setcolaboladores] = useState([]);
   const [Vacaciones, setVacaciones] = useState([]);
 
-
     const [, setCorreo] = useState("");
-    const [, setUsuarios] = useState("");
+    const [Usuario, setUsuarios] = useState("");
     const [,setequipo] = useState("");
     const [comentario, setComentario] = useState("");
     const [Acreditacion, setAcreditacion] = useState("En proceso");
-    
     const [title, settitle] = useState("");
     const [start, setstart] = useState("");
     const [end, setend] = useState("");
 
-
     const VacacionesCollection = collection(db, "Vacaciones");
     const colaboladoresCollection = collection(db, "colaboladores");
 
-    
      // /// modal
      const [open, setOpen] = React.useState(false);
      const handleOpen = () => setOpen(true);
@@ -87,20 +55,11 @@ function HomeUser({user}) {
          Acreditacion:Acreditacion ,
          title:title,
          start:start,
-         end:end
+         end:end,
         })
-  
+  alert(e)
       console.log(e);  
     }
-  
-    function handleAddEvent() {
-      setVacaciones([...Vacaciones, 
-          {title, start, end
-      }]);
-      console.log(Vacaciones);
-      
-  }
-    
 
     const getvacaciones = async () => {
       const data = await getDocs(VacacionesCollection)
@@ -110,7 +69,6 @@ function HomeUser({user}) {
       console.log(Vacaciones)
   
     }
-  
     //mostrar los colaboradores
     const getcolaboladores = async () => {
       const data = await getDocs(colaboladoresCollection)
@@ -128,13 +86,18 @@ function HomeUser({user}) {
       getcolaboladores()
     }, [])
   
-    return (
-      <div>
-
-    <div className='d-flex justify-content-end '>
+   function Home() {
+return <>
+   <div className='d-flex justify-content-end mr-auto p-2'>
       <button className='btn btn-primary'  onClick={handleOpen}>   
               Acreditacion
      </button>
+     &nbsp;&nbsp;&nbsp;&nbsp;
+     <Link to="/Calendario"  className='btn btn-success' >   
+    <i class="fa-regular fa-rotate-left"></i>
+               Calendario
+    </Link>
+ 
     </div>     
   
     <Modal
@@ -146,12 +109,10 @@ function HomeUser({user}) {
 
 
   <Box sx={style}>
-    {/* contenido del moda --- y en el contenido tenemos todo para registrar el cheque del administrador  */}
-    
       {
       colaboladores.map((Colaborador) =>{
         return( 
-          <div>
+          <div key={Colaborador.id}>
   
         
         {
@@ -160,7 +121,7 @@ function HomeUser({user}) {
               return(
               
 
-      <div>
+      <div key={vacacion.id}>
                         {/* <p>Fechas</p> 
                           <p>{vacacion.FechaInicial}-{vacacion.FechaFinal}</p> */}
                           <p>Estado</p> 
@@ -196,7 +157,8 @@ function HomeUser({user}) {
     <div className="row d-flex justify-content-evenly" >
   <div className="col-5">
   <label className="col-sm-1 col-form-label"> Nombre: </label>
-    <input    value={user['NOMBRE COMPLETO']}                      
+    <input    value={user['NOMBRE COMPLETO']} 
+    elected = {Usuario}                     
                           onChange ={()=> setUsuarios(user['NOMBRE COMPLETO'])}  
                           type='text'
                           className='form-control '                                                 
@@ -241,7 +203,7 @@ function HomeUser({user}) {
             className="form-select form-select-lg mb-3 is-invalid" aria-label=".form-select-md example" 
             required
             >
-                          
+
               <option></option>            
                           <option>Vacaciones</option>
                           <option>Permisos</option>
@@ -315,13 +277,8 @@ function HomeUser({user}) {
       Style="padding:11px;"  
       type='submit'  
       className='btn btn-success '  
-      onClick={handleAddEvent}
     >   
-    <i className="fa-solid fa-arrow-right" />&nbsp;
       Enviar Solicitud
-  
-   
-  
     </button>
       
 
@@ -329,10 +286,20 @@ function HomeUser({user}) {
     </div>
   
        </form>
-       <Calendar localizer={localizer} events={Vacaciones}  style={{ height: 700, margin: "50px"}} />
 
+</>
+   }
+
+
+    return (
+      <div>
+         <BrowserRouter>
+              <Routes>
+                <Route path='/' element={<Home />} ></Route>
+                <Route path='/Calendario' element={<Calendario />} ></Route>
+            </Routes>
+        </BrowserRouter>
       </div>
-  
    )
   
   }
