@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { collection, getDocs, addDoc, doc, updateDoc, getDoc, startAt } from 'firebase/firestore'
+import { collection, getDocs } from 'firebase/firestore'
 import { db } from '../../Config/firestore'
-import { Box, Modal } from '@mui/material'
 
-import { Link, Route, Routes, useParams } from 'react-router-dom'
+import { Link, Route, Routes } from 'react-router-dom'
 import Calendario from '../Calendario/Calendario';
 import Edit from '../Edit';
 
 function TEAMADMIN({ user }) {
     const [Vacaciones, setVacaciones] = useState([]);
-    const [Acreditacion, setAcreditacion] = useState("");
-    const [comentarioSuperior, setcomentarioSuperior] = useState("");
+    const [Colaborador, setcolaboladores ] =useState([])
     const VacacionesCollection = collection(db, "Vacaciones");
+    const ColaboladoresCollection = collection(db, "colaboladores");
+
+
 
     //mostrar los VACACIONES
     const getvacaciones = async () => {
@@ -24,9 +25,22 @@ function TEAMADMIN({ user }) {
 
     }
 
+    const getcolaboladores = async () => {
+        const data = await getDocs(ColaboladoresCollection)
+        console.log(data.docs);
+        setcolaboladores(
+            data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+        )
+        console.log(Colaborador)
+
+    }
+
     // use efect  
     useEffect(() => {
         getvacaciones()
+        getcolaboladores()
+
+
     }, [])
 
 
@@ -63,8 +77,8 @@ function TEAMADMIN({ user }) {
                                     return (
                                         <tbody key={vacacion.id} >
 
-                                            <tr  >
-                                               
+                                            <tr >
+
                                                 <td >
                                                     <div className="h-25">
 
@@ -73,7 +87,7 @@ function TEAMADMIN({ user }) {
 
 
                                                         <div style={{ marginLeft: 50, marginTop: -40 }}>
-                                                            <a Style="font-family: 'Anek Latin', sans-serif; Font-size: 14px; ">
+                                                            <a Style="font-family: 'Anek Latin', sans-serif; Font-size: 14px; " name="nombre" >
                                                                 {vacacion['NOMBRE COMPLETO']}
                                                             </a>
 
@@ -90,15 +104,15 @@ function TEAMADMIN({ user }) {
                                                     {vacacion['EQUIPO DE TRABAJO']}
                                                 </td>
                                                 <td
-                                                    Style="font-family: 'Anek Latin', sans-serif; Font-size: 13px;" >
+                                                    Style="font-family: 'Anek Latin', sans-serif; Font-size: 13px;" name="asunto">
                                                     {vacacion.title}
                                                 </td>
                                                 <td
-                                                    Style="font-family: 'Anek Latin', sans-serif; Font-size: 13px;" >
+                                                    Style="font-family: 'Anek Latin', sans-serif; Font-size: 13px;"  name="fechai">
                                                     {vacacion.start}
                                                 </td>
                                                 <td
-                                                    Style="font-family: 'Anek Latin', sans-serif; Font-size: 13px;" >
+                                                    Style="font-family: 'Anek Latin', sans-serif; Font-size: 13px;" name="fechaf">
                                                     {vacacion.end}
                                                 </td>
                                                 <td
@@ -112,13 +126,14 @@ function TEAMADMIN({ user }) {
                                                 <td>
                                                 <Link className='btn btn-warning ' to={`/Edit/${vacacion.id}` }> acreditar</Link>
                                                 </td>
-                                                <td>
-
-                                                </td>
+                                              
                                             </tr>
                                         </tbody>
+
+                                        
                                     )
                                 }
+
 
                             }
                             )
@@ -145,6 +160,7 @@ function TEAMADMIN({ user }) {
                 <Route path='/' element={<Home />} ></Route>
                 <Route path='/Calendario' element={<Calendario/>}></Route>
                 <Route path='/Edit/:id' element={<Edit/>}/>
+          
             </Routes>
         </div>
     )

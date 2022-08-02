@@ -19,68 +19,39 @@ function AuthGoogle() {
       })
   }
   return (
-    <div 
-    Style="
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-    background: linear-gradient(to right, #b92b27, #1565c0)
-    margin-bottom:20px;
-    border:none;
-    width: 500px;
-    padding: 40px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    background: #191919;
-    text-align: center;
-    transition: 0.25s;
-    margin-top: 100px
-    border: 0;
-    background: none;
-    display: block;
-    margin: 20px auto;
-    text-align: center;
-    border: 2px solid #3498db;
-    padding: 10px 10px;
-    width: 250px;
-    outline: none;
-    color: white;
-    border-radius: 24px;
-    transition: 0.25s
-    color: white;
-    text-transform: uppercase;
-    font-weight: 500
-    width: 300px;
-    border-color: #2ecc71
-    border: 0;
-    background: none;
-    display: block;
-    margin: 20px auto;
-    text-align: center;
-    border: 2px solid #2ecc71;
-    padding: 14px 40px;
-    outline: none;
-    color: white;
-    border-radius: 24px;
-    transition: 0.25s;
-    cursor: pointer
-    background: #2ecc71
-    text-decoration: underline
-    list-style: none;
-    display: inline;
-    margin-left: 0 
-    padding: 0
-    display: inline;
-    margin: 0 5px
-    margin-left: 100px;
-    margin-right: 100px;
-    margin-top: 50px;
-    margin-bottom: 100px;
-  "
+    <div
+      Style="
+      margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+  height: 2000px;
+	background-color: red;
+	background-image: url(https://upload.wikimedia.org/wikipedia/commons/6/64/Creaci%C3%B3n_de_Ad%C3%A1n_%28Miguel_%C3%81ngel%29.jpg);
+	background-size: 100% auto;
+	background-position: top center;
+	background-attachment: fixed;
+  height: 100%;
+	background-size: 100% 100%;
+	mix-blend-mode: difference;
+  min-height:550px ;
+      max-width:1000px;
+      margin:100px auto;
+      border-radius:25px;
+      color:#fff;
+      flex-direction:column;
+      overflow:hidden;
+      animation: hi 0.5s;
+      box-sizing:border-box;
+      flex:1;
+      white-space:nowrap;
+      position:relative;
+      transition:all 0.4s;
+     "
     >
-      <div className="d-grid gap-2 col-12 mx-auto">
-        <button className="btn btn- btn-lg" onClick={loginGogle} type="button">Solicitar Vacaciones</button>
+      <div class="container-fluid h-100"> 
+      <div class="col v-center">
+        <button className="btn btn-primary mx-auto" onClick={loginGogle} type="button">Solicitar Vacaciones</button>
+      </div>
       </div>
       <br />
 
@@ -102,3 +73,18 @@ function AuthGoogle() {
 }
 
 export default AuthGoogle
+/*font-family: 'Raleway', sans-serif;
+      min-height:0px auto;
+      max-width:250px;
+      margin:100px auto;
+      border-radius:25px;
+      color:#fff;
+      flex-direction:column;
+      overflow:hidden;
+      animation: hi 0.5s;
+      box-sizing:border-box;
+      flex:1;
+      white-space:nowrap;
+      position:relative;
+      transition:all 0.4s;
+      background:linear-gradient(to left, #955DFF, #6FAAFF);*/

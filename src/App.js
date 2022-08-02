@@ -36,7 +36,11 @@ async function setUserWithFirebaseAndRol(usuarioFirebase) {
       ['EQUIPO DE TRABAJO']: res['EQUIPO DE TRABAJO'],     
       ['AREA FUNCIONAL']: res['AREA FUNCIONAL'],
       ['NOMBRE COMPLETO']: res['NOMBRE COMPLETO'],
-      ['NOMBRE CORTO']: res['NOMBRE CORTO']      
+      ['NOMBRE CORTO']: res['NOMBRE CORTO'],
+      Dias: res.Dias,
+      ['CORREO ELCTRONICO DEL SUPERVISOR']: res['CORREO ELCTRONICO DEL SUPERVISOR']   ,   
+      ['CORREO ELCTRONICO DEL DIRECTOR']: res['CORREO ELCTRONICO DEL DIRECTOR']   ,   
+
     }
 
     setUser(userData);
