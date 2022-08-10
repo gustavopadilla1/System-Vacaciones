@@ -8,7 +8,7 @@ import Edit from '../Edit';
 
 function TEAMADMIN({ user }) {
     const [Vacaciones, setVacaciones] = useState([]);
-    const [Colaborador, setcolaboladores ] =useState([])
+    const [Colaborador, setcolaboladores ] = useState([])
     const VacacionesCollection = collection(db, "Vacaciones");
     const ColaboladoresCollection = collection(db, "colaboladores");
 
@@ -64,7 +64,7 @@ function TEAMADMIN({ user }) {
                             <th scope="col">FECHA FINAL</th>
                             <th scope="col">ACREDITACION</th>
                             <th scope="col">COMENTARIOS</th>
-                            <th scope="col">Accion</th>
+                            <th scope="col">ACCION</th>
                         </tr>
                     </thead>
 
@@ -105,7 +105,7 @@ function TEAMADMIN({ user }) {
                                                 </td>
                                                 <td
                                                     Style="font-family: 'Anek Latin', sans-serif; Font-size: 13px;" name="asunto">
-                                                    {vacacion.title}
+                                                    {vacacion.Tipo}
                                                 </td>
                                                 <td
                                                     Style="font-family: 'Anek Latin', sans-serif; Font-size: 13px;"  name="fechai">
@@ -151,8 +151,6 @@ function TEAMADMIN({ user }) {
     return (
         <div user={user}>   
 
-            {/* boton y elmodal */}
-            {/* <Button onClick={handleOpen} variant="contained" color="success" endIcon={<SendIcon />}>Checar</Button> */}
             <br /><br />
 
 

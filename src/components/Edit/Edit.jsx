@@ -8,6 +8,9 @@ import sendCustomEmail from '../NotificacionGoogle/sendCustomEmail';
 // import firebaseApp from '../../Config/Credenciales'
 // import {getAuth,signOut} from 'firebase/auth';
 // const auth = getAuth(firebaseApp);
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+const MySwal = withReactContent(Swal);
 
 const Edit = ({ user }) => {
 
@@ -23,14 +26,12 @@ const Edit = ({ user }) => {
   const VacacionesCollection = collection(db, "Vacaciones");
   const ColaboladoresCollection = collection(db, "colaboladores");
 
-
+  const [DiasDisponibles, setDiasDisponibles] = useState("");
   const [Director, setDirector] = useState("")
   const [Usuario, setUsuarios] = useState("")
-  const [title, settitle] = useState("");
+  const [Tipo, setTipo] = useState("");
   const [start, setstart] = useState("");
   const [end, setend] = useState("");
-
-
 
 
   const getcolaboladores = async () => {
@@ -49,24 +50,57 @@ const Edit = ({ user }) => {
 
   }, [])
 
-
-
   const update = async (e) => {
     e.preventDefault()
     const vacacion = doc(db, "Vacaciones", id)
-    const data = { Acreditacion, color, Usuario: Usuario }
+    const data = { Acreditacion: "Aprobar", color: "green", DiasDisponibles, Usuario: Usuario }
     await updateDoc(vacacion, data)
 
-    let correo = e.target.correo.value;
-    let asunto = e.target.asunto.value;
-    let nombre = e.target.nombre.value;
-    let fechai = e.target.fechai.value;
-    let fechaf = e.target.fechaf.value;
+    let correo = "josegustavopadillatorres@gmail.com";
+    let asunto = Tipo;
+    let nombre = Usuario;
+    let fechai = start;
+    let fechaf = end;
 
     sendCustomEmail(correo, asunto, nombre, fechai, fechaf);
-    
-      navigate('/')
-      // signOut(auth);
+
+    MySwal.fire({
+      position: 'center',
+      icon: 'success',
+      title: 'Actualizacion y Notificado hecho con exito !!!',
+      showConfirmButton: false,
+      timer: 2000
+      })  
+
+    navigate('/')
+    // signOut(auth);
+
+  }
+
+  const negar = async (e) => {
+    e.preventDefault()
+    const vacacion = doc(db, "Vacaciones", id)
+    const data = { Acreditacion: "Negar", color: "white", Usuario: Usuario }
+    await updateDoc(vacacion, data)
+
+    let correo = "josegustavopadillatorres@gmail.com";
+    let asunto = Tipo;
+    let nombre = Usuario;
+    let fechai = start;
+    let fechaf = end;
+
+    sendCustomEmail(correo, asunto, nombre, fechai, fechaf);
+
+    MySwal.fire({
+      position: 'center',
+      icon: 'success',
+      title: 'Actualizacion y Notificado hecho con exito !!!',
+      showConfirmButton: false,
+      timer: 2000
+      })  
+
+    navigate('/')
+    // signOut(auth);
 
   }
 
@@ -81,12 +115,11 @@ const Edit = ({ user }) => {
 
       //haicodiado (dtalle resolver)
       setDirector("josegustavopadillatorres@gmail.com")
-      settitle(vacacion.data().title)
+      setTipo(vacacion.data().Tipo)
       setstart(vacacion.data().start)
       setend(vacacion.data().end)
 
-
-
+      setDiasDisponibles(vacacion.data().DiasDisponibles - vacacion.data().DiasSolicitados);
 
     } else {
       console.log("el usuario no existe");
@@ -94,20 +127,21 @@ const Edit = ({ user }) => {
   }
 
 
-  const ok = () => {
-    if (Acreditacion === "Aprobar") {
-      setColor("green")
+  // const Enviar =  async() => {
 
-
-    } else {
-      setColor("red")
-    }
-    return color;
-  }
+  //   if(Acreditacion ==="Aprobar"){
+  //     setColor("green")
+  //   } else {
+  //     setColor("white")
+  //   }
+  //   return color;
+  // }
 
   useEffect(() => {
     getUsuariosById(id)
   }, [])
+
+
 
   const style = {
     position: 'absolute',
@@ -124,13 +158,13 @@ const Edit = ({ user }) => {
 
   return (
     <Box sx={style} user={user} >
-<Link to="/" className='btn btn-primary' >
+      <Link to="/" className='btn btn-primary' >
         <i class="fa-regular fa-rotate-left"></i>
         Volver
       </Link>
       <br /><br />
       <form
-        onSubmit={update}
+      // onSubmit={update}
       >
 
         <div className="row d-flex justify-content-evenly" >
@@ -140,12 +174,11 @@ const Edit = ({ user }) => {
             <input value={Usuario}
 
               name="nombre"
-
               onChange={(e) => setUsuarios(e.target.value)}
               type='text'
               className='form-control '
               disabled
-              
+
             />
           </div>
 
@@ -154,7 +187,6 @@ const Edit = ({ user }) => {
             <input value={Director}
 
               name="correo"
-
               onChange={(e) => setDirector(e.target.value)}
               type='text'
               className='form-control '
@@ -167,8 +199,8 @@ const Edit = ({ user }) => {
             <label className="col-sm-1 col-form-label">Tipo: </label>
             <select
               name="asunto"
-              value={title}
-              onChange={(e) => settitle(e.target.value)}
+              value={Tipo}
+              onChange={(e) => setTipo(e.target.value)}
               className="form-select form-select-lg mb-3 " aria-label=".form-select-md example"
               disabled
             >
@@ -214,23 +246,23 @@ const Edit = ({ user }) => {
 
 
         </div>
-        <label className="col-sm-1 col-form-label">Accion: </label>
+        {/* <label className="col-sm-1 col-form-label">Accion: </label>
         <select value={Acreditacion}
           onChange={(e) => setAcreditacion(e.target.value)}
-            className="form-select form-select-lg mb-3 is-invalid" aria-label=".form-select-md example" 
-          required
+            className="form-select form-select-lg mb-3 " aria-label=".form-select-md example" 
+          
         >
           <option></option>
           <option>Aprobar</option>
-          <option>Denegar </option>
-        </select>
- 
+          <option>Negar</option>
 
+        </select> */}
 
+        <br />
         <div className="row mb-1 justify-content-center" >
-          <div className="col-sm-11">
+          <div className="col-sm-6">
             <textarea
-              placeholder="Deseas colocar un comentario: (opcional)"
+              placeholder="Comentario: (opcional)"
               value={comentarioSuperior}
               onChange={(e) => setcomentarioSuperior(e.target.value)}
               type='text'
@@ -240,10 +272,19 @@ const Edit = ({ user }) => {
         </div>
 
 
-
         <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-        <button className='btn btn-success justify-content-center' onClick={ok}>Enviar  </button>
+        <button className='btn btn-success ' onClick={update}>Aprobar   </button>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+        <button className='btn btn-warning ' onClick={negar}>Negar   </button>
+
+
       </form>
 
     </Box>
