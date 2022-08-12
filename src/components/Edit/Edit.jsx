@@ -56,7 +56,7 @@ const Edit = ({ user }) => {
     const data = { Acreditacion: "Aprobar", color: "green", DiasDisponibles, Usuario: Usuario }
     await updateDoc(vacacion, data)
 
-    let correo = "josegustavopadillatorres@gmail.com";
+    let correo = "jvargas@varfa.com.mx";
     let asunto = Tipo;
     let nombre = Usuario;
     let fechai = start;
@@ -83,7 +83,7 @@ const Edit = ({ user }) => {
     const data = { Acreditacion: "Negar", color: "white", Usuario: Usuario }
     await updateDoc(vacacion, data)
 
-    let correo = "josegustavopadillatorres@gmail.com";
+    let correo = "jvargas@varfa.com.mx";
     let asunto = Tipo;
     let nombre = Usuario;
     let fechai = start;
@@ -114,7 +114,7 @@ const Edit = ({ user }) => {
       setUsuarios(vacacion.data()['NOMBRE COMPLETO'])
 
       //haicodiado (dtalle resolver)
-      setDirector("josegustavopadillatorres@gmail.com")
+      setDirector("jvargas@varfa.com.mx")
       setTipo(vacacion.data().Tipo)
       setstart(vacacion.data().start)
       setend(vacacion.data().end)

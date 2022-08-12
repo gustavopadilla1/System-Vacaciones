@@ -487,6 +487,7 @@ MySwal.fire({
             <tr Style="font-family: 'Heebo', sans-serif; Font-size: 14px;" >
 
               <th scope="col" >USUARIO</th>
+              <th scope="col" >EQUIPO</th>
               <th scope="col" >TIPO</th>
               <th scope="col" >FECHA INICIO</th>
               <th scope="col" >FECHA FINAL</th>
@@ -533,7 +534,10 @@ MySwal.fire({
                           </div>
                         </div>
                       </td>
-
+                      <td
+                        Style="font-family: 'Anek Latin', sans-serif; Font-size: 13px;" >
+                        {vacacion['EQUIPO DE TRABAJO']}
+                      </td>
                       <td
                         Style="font-family: 'Anek Latin', sans-serif; Font-size: 13px;" name="asunto">
                         {vacacion.Tipo}

@@ -245,7 +245,11 @@ function DirectorGeneral({ user }) {
         return <>
       
         <div className='' >
-
+        <Link to="/" className='btn btn-primary'>
+        <i class="fa-regular fa-rotate-left"></i>
+        Volver
+      </Link>
+      <br /><br />
             <table className="container">
 
                 <thead>
